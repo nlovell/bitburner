@@ -30,7 +30,7 @@ function mainFunction() {
 		let hxLvl = ns.getHackingLevel();
 		
 		if (servHxLvl < hxLvl && ns.hasRootAccess(node) && node != ns.getHostname() && node != "CSEC")
-			ns.exec("hx.script", ns.getHostname(), (ns.getServerNumPortsRequired(node) + 1) * 2, node);
+			ns.exec("js/hackloop.js", ns.getHostname(), (ns.getServerNumPortsRequired(node) + 1) * 2, node);
 	});
 }
 
