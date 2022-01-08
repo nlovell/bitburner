@@ -1,4 +1,3 @@
-//updated text test
 var cracks = {
   brutessh: false,
   ftpcrack: false,
@@ -16,12 +15,7 @@ const lse = "           ";
  */
 export async function main(nse) {
   ns = nse;
-  maxports = 0;
-  //while (true) {
-  //	ns.killall();
   mainFunction();
-  //	await ns.sleep(43200000);
-  //}
 }
 
 function mainFunction() {
@@ -30,7 +24,6 @@ function mainFunction() {
   let tree = buildTree(ns.getHostname(), {});
 
   ns.tprint(lse + "Nuking Tree!");
-  ns.tprint(tree); //hewwo
   nukeTree(tree);
 
   Object.keys(tree).forEach((node) => {
@@ -113,8 +106,8 @@ function nukeNode(node) {
       ns.tprint("Server: " + servHxLvl + "| You: " + hxLvl);
       if (servHxLvl < hxLvl) {
         runCrackSuite(node);
+        ns.nuke(node);
 
-        //ns.nuke(node);
         if (!ns.hasRootAccess(node)) {
           ns.toast(node + " nuked!", "success");
         } else ns.toast(node + "not nuked.", "error");
@@ -129,12 +122,12 @@ function nukeNode(node) {
 }
 
 /**
- * Runs the available cracking tools on a provided node in the network.
+ * Runs the available hacking tools on a provided node in the network.
  * @param {String} node the name of the node to crack
  */
 function runCrackSuite(node) {
   Object.keys(cracks).forEach((crack) => {
-    if (crack == true) ns.run(crack + ".exe", node);
+    if (cracks[crack] == true) ns.run(crack + ".exe", node);
   });
 }
 
@@ -147,7 +140,7 @@ function checkPortOpeningTools() {
 
   let maxports = 0;
   Object.keys(cracks).forEach((crack) => {
-    if (ns.fileExists(crack + ".exe", home)) {
+    if (ns.fileExists(crack + ".exe", "home")) {
       cracks[crack] = true;
       maxports++;
     }
