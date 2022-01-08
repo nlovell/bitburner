@@ -1,0 +1,15 @@
+i = 0;
+cost = 55000;
+targetgb = 32;
+
+tprint("Target sever (" + targetgb + "GB) cost: $" + (targetgb*cost)/1000000 + "m")
+
+while(i < 25) {
+    if (getServerMoneyAvailable("home") > cost * targetgb) {
+        hostname = purchaseServer("pserv-" + i, targetgb);
+        scp("master.js", hostname);
+        scp("hx.script", hostname)
+        exec("master.js", hostname);
+        ++i;
+    }
+}
