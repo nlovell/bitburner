@@ -11,6 +11,8 @@ var maxports = 0;
 const lse = "           ";
 
 /**
+ * Bitburner entrypoint to Master script
+ *
  * @param {ns} nse changing ns scope
  */
 export async function main(nse) {
@@ -18,6 +20,9 @@ export async function main(nse) {
   mainFunction();
 }
 
+/**
+ * Kicks off the Master script
+ */
 function mainFunction() {
   checkPortOpeningTools();
   ns.tprint(lse + "Generating Tree!");
@@ -47,13 +52,13 @@ function mainFunction() {
  * @param {String} home the root of the tree scan
  */
 function buildTree(home, baseTree) {
-  var tree = baseTree;
+  let tree = baseTree;
   let res = ns.scan(home);
   for (const node of res) {
-    if (tree[node] != "set") {
+    if (tree[node] != true) {
       basicprint(node, ns.hasRootAccess(node));
       //add the node to the tree
-      tree[node] = "set";
+      tree[node] = true;
       tree = buildTree(node, tree);
     }
   }
