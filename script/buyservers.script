@@ -1,4 +1,4 @@
-i = 0;
+i = 1;
 cost = 55000;
 targetgb = 32;
 
@@ -7,9 +7,6 @@ tprint("Target sever (" + targetgb + "GB) cost: $" + (targetgb*cost)/1000000 + "
 while(i < 25) {
     if (getServerMoneyAvailable("home") > cost * targetgb) {
         hostname = purchaseServer("pserv-" + i, targetgb);
-        scp("js/master.js", hostname);
-        scp("js/hackloop.js", hostname)
-        exec("master.js", hostname);
         ++i;
     }
 }

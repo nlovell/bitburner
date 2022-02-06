@@ -1,6 +1,8 @@
 {
     "recommendations": [
         "bitburner.bitburner-vscode-integration",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "samverschueren.linter-xo"
     ]
 }

@@ -8,18 +8,14 @@ export async function main(ns) {
 
   while (true) {
     if (ns.getServerSecurityLevel(target) > securityThresh) {
-      ns.weaken(target);
-      ns.toast("Weakened " + target, "info");
+      await ns.weaken(target);
     } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
-      ns.grow(target);
-      ns.toast("Grew " + target, "info");
+      await ns.grow(target);
     } else {
-      try {
-        let target = await ns.hack(target);
-        ns.toast("Hacked " + target);
-      } catch (error) {
-        ns.toast("Failed to hack " + target, "error");
-      }
+      await ns.hack(target);
     }
   }
 }
+
+//Every 20 cycles or so, recalculate the most profitable action and target that
+//

@@ -3,5 +3,7 @@
     "bitburner.showPushSuccessNotification": true,
     "bitburner.fileWatcher.enable": true,
     "bitburner.showFileWatcherEnabledNotification": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "eslint.run": "onSave",
+    "eslint.alwaysShowStatus": true
 }

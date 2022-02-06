@@ -1,11 +1,6 @@
-var cracks = {
-  brutessh: false,
-  ftpcrack: false,
-  httpworm: false,
-  relaysmtp: false,
-  sqlinject: false,
-};
-var ns;
+import { nukeNode } from "./js/nukenode.js";
+import { checkPortOpeningTools } from "./js/functions.js";
+
 var maxports = 0;
 
 const lse = "           ";
@@ -13,37 +8,23 @@ const lse = "           ";
 /**
  * Bitburner entrypoint to Master script
  *
- * @param {ns} nse changing ns scope
+ * @param {NS} ns
  */
-export async function main(nse) {
-  ns = nse;
-  mainFunction();
+export async function main(ns) {
+  mainFunction(ns);
 }
 
 /**
  * Kicks off the Master script
+ * @param {NS} ns
  */
-function mainFunction() {
-  checkPortOpeningTools();
+function mainFunction(ns) {
+  checkPortOpeningTools(ns);
   ns.tprint(lse + "Generating Tree!");
   let tree = buildTree(ns.getHostname(), {});
 
   ns.tprint(lse + "Nuking Tree!");
   nukeTree(tree);
-
-  Object.keys(tree).forEach((node) => {
-    let servHxLvl = ns.getServerRequiredHackingLevel(node);
-    let hxLvl = ns.getHackingLevel();
-
-    if (
-      servHxLvl < hxLvl &&
-      ns.hasRootAccess(node) &&
-      node != ns.getHostname() &&
-      node != "CSEC"
-    ) {
-      //ns.exec("js/hackloop.js", ns.getHostname(), (ns.getServerNumPortsRequired(node) + 1) * 2, node);
-    }
-  });
 }
 
 /**
@@ -57,7 +38,6 @@ function buildTree(home, baseTree) {
   for (const node of res) {
     if (tree[node] != true) {
       basicprint(node, ns.hasRootAccess(node));
-      //add the node to the tree
       tree[node] = true;
       tree = buildTree(node, tree);
     }
@@ -88,69 +68,8 @@ function basicprint(node, bool) {
  *
  * @param {Object} nodes "tree" of nodes, stored as object key strings, to be nuked
  */
-function nukeTree(nodes) {
+function nukeTree(ns, nodes) {
   Object.keys(nodes).forEach((key) => {
-    nukeNode(key);
+    nukeNode(ns, key);
   });
-}
-
-/**
- * Checks if a node is NUKEable, opens the required ports, and then runs NUKE.exe on it.
- *
- * @param {String} node name of node to be nuked
- */
-function nukeNode(node) {
-  //ns.tprint(node + " - " + ns.hasRootAccess);
-  if (!ns.hasRootAccess(node)) {
-    if (ns.getServerNumPortsRequired(node) <= maxports) {
-      ns.tprint("Nuking Node: " + node);
-
-      let servHxLvl = ns.getServerRequiredHackingLevel(node);
-      let hxLvl = ns.getHackingLevel();
-
-      ns.tprint("Server: " + servHxLvl + "| You: " + hxLvl);
-      if (servHxLvl < hxLvl) {
-        runCrackSuite(node);
-        ns.nuke(node);
-
-        if (!ns.hasRootAccess(node)) {
-          ns.toast(node + " nuked!", "success");
-        } else ns.toast(node + "not nuked.", "error");
-      } else
-        ns.tprint(
-          "You do not meet the minimum hacking level requirement for " + node
-        );
-    } else {
-      //ns.tprint("Cannot nuke node " + node + " due to port requirements - [" + ns.getServerNumPortsRequired(node) + "]");
-    }
-  }
-}
-
-/**
- * Runs the available hacking tools on a provided node in the network.
- * @param {String} node the name of the node to crack
- */
-function runCrackSuite(node) {
-  Object.keys(cracks).forEach((crack) => {
-    if (cracks[crack] == true) ns.run(crack + ".exe", node);
-  });
-}
-
-/**
- * Checks for hacking tools on the local machine.
- * @returns the maximum number of ports for a server to be crackable
- */
-function checkPortOpeningTools() {
-  ns.tprint(lse + "Checking for hacking tools!");
-
-  let maxports = 0;
-  Object.keys(cracks).forEach((crack) => {
-    if (ns.fileExists(crack + ".exe", "home")) {
-      cracks[crack] = true;
-      maxports++;
-    }
-  });
-
-  ns.tprint(maxports + " tools found!");
-  return maxports;
 }
